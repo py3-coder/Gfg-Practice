@@ -49,79 +49,27 @@ class gfg
 class Solution 
 { 
     //Function to return max value that can be put in knapsack of capacity W.
-    static int[][] memo = new int[1001][1001];
+    static int[][] memo =new int[1001][1001];
     static int knapSack(int W, int wt[], int val[], int n) 
     { 
-         //Lets Play with Recursion --> DP ::
-         //1. Call Recursion::
-         //return solveRec(W,wt,val,n);
-         // TLE :: 1156/1210
-         // TC : O(2^n)
-         // SC :O(1) -- Aux. Space : O(n)
-         //2. Memo::
-         //best ways to fill 2d array with single value::
-        //  Arrays.stream(memo).forEach(a -> Arrays.fill(a, -1));
-        //  return solveMemo(W,wt,val,n);
-        // Test Case : 1210/1210
-        // TC : O(n*w)
-        // SC : O(n*w)
-        return solvetab(W,wt,val,n);
-         
+        Arrays.stream(memo).forEach(a-> Arrays.fill(a,-1));
+        return solveRec(W,wt,val,n);
     } 
-    public static int solveRec(int w ,int wt[] ,int val[],int n){
+    public static int solveRec(int w,int[] wt,int[] val,int n){
         //Base Case ::
-        if(w==0 || n==0){
-            return 0;
-        }
-        //
-        if(wt[n-1]>w){
-            //not pick case since wt is greater::
-            return solveRec(w,wt,val,n-1);
-        }else{
-            //pick and not pick :: max 
-            return Math.max(val[n-1]+solveRec(w-wt[n-1],wt,val,n-1),solveRec(w,wt,val,n-1));
-        }
-    }
-    public static int solveMemo(int w ,int wt[] ,int val[],int n){
-        //Base Case ::
-        if(w==0 || n==0){
-            return 0;
-        }
-        //check pre-calculated ::
-        if(memo[n][w]!=-1){
-            return memo[n][w];
-        }
-        if(wt[n-1]>w){
-            //not pick case since wt is greater::
-            return memo[n][w]=solveMemo(w,wt,val,n-1);
-        }else{
-            //pick and not pick :: max 
-            return memo[n][w]=Math.max(val[n-1]+solveMemo(w-wt[n-1],wt,val,n-1),solveMemo(w,wt,val,n-1));
-        }
-    }
-    public static int solvetab(int w,int wt[],int val[],int n){
-        // Base ---> Insilization::
-        int[][] tab = new int[n+1][w+1];
-        for(int i=0;i<n+1;i++){
-            for(int j=0;j<w+1;j++){
-                if(i==0 || j==0){
-                    tab[i][j] =0;
-                }
-            }
-        }
+        if(w==0 || n==0) return 0;
         
-        for(int i=1;i<n+1;i++){
-            for(int j=1;j<w+1;j++){
-                if(wt[i-1]>j){
-                    tab[i][j] =tab[i-1][j];
-                }else{
-                    tab[i][j] =Math.max(val[i-1]+tab[i-1][j-wt[i-1]],tab[i-1][j]);
-                }
-            }
+        if(memo[w][n]!=-1){
+            return memo[w][n];
         }
-        return tab[n][w];
+        if(w<wt[n-1]){
+           return memo[w][n]=solveRec(w,wt,val,n-1);
+        }
+        int pick =val[n-1]+solveRec(w-wt[n-1],wt,val,n-1);
+        int notpick =solveRec(w,wt,val,n-1);
+        return memo[w][n]=Math.max(pick,notpick);
+        
     }
-    
 }
 
 
