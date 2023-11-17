@@ -35,10 +35,14 @@ class Solution{
 	    //return solveRec(coins.length,coins,V);
 	    
 	    //2. Memo
-	    int n=coins.length;
-	    int memo[][] = new int[n+1][V+1];
-	    Arrays.stream(memo).forEach(a->Arrays.fill(a,-1));
-	    return solveMemo(n,coins,V,memo)==Integer.MAX_VALUE-1?-1:solveMemo(n,coins,V,memo);
+	    //TC : O(n*v)
+	   //int n=coins.length;
+	   // int memo[][] = new int[n+1][V+1];
+	   // Arrays.stream(memo).forEach(a->Arrays.fill(a,-1));
+	   // return solveMemo(n,coins,V,memo)==Integer.MAX_VALUE-1?-1:solveMemo(n,coins,V,memo);
+	   
+	   //3.Tabulation::
+	   return solveTab(M,coins,V);
 	}
 	public static int solveRec(int n,int coins[],int sum){
 	    //Base ::
@@ -62,5 +66,27 @@ class Solution{
 	    }else{
 	        return memo[n][sum] =Math.min(1+solveMemo(n,coins,sum-coins[n-1],memo),solveMemo(n-1,coins,sum,memo));
 	    }
+	}
+	public static int solveTab(int n,int coins[],int sum){
+	    //Tabulation:)
+	    
+	    int tab[][] = new int[n+1][sum+1];
+	    //base->Initlization::
+	    for(int i=0;i<n+1;i++){
+	        for(int j=0;j<sum+1;j++){
+	            if(i==0) tab[i][j] =Integer.MAX_VALUE-1;
+	            if(j==0) tab[i][j] =0;
+	        }
+	    }
+	    for(int i=1;i<n+1;i++){
+	        for(int j=1;j<sum+1;j++){
+	            if(coins[i-1]>j){
+	                tab[i][j] =tab[i-1][j];
+	            }else{
+	                tab[i][j] =Math.min(1+tab[i][j-coins[i-1]],tab[i-1][j]);
+	            }
+	        }
+	    }
+	    return tab[n][sum]==Integer.MAX_VALUE-1?-1:tab[n][sum];
 	}
 }
