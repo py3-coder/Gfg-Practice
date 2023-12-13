@@ -39,13 +39,29 @@ class Solution {
         int[] vis=new int[V];
         for(int i=0;i<V;i++){
             if(vis[i]!=1){
-                if(bfs(i,vis,adj)){
+                // if(bfs(i,vis,adj)){
+                //     return true;
+                // }
+                if(dfs(i,-1,vis,adj)==true){
                     return true;
                 }
             }
         }
         return false;
         
+    }
+    public static boolean dfs(int node,int parent,int[] vis,ArrayList<ArrayList<Integer>> adj){
+        vis[node] =1;
+        for(int nodes : adj.get(node)){
+            if(vis[nodes]!=1){
+                if(dfs(nodes,node,vis,adj)==true){
+                    return true;
+                }
+            }else if(vis[nodes]==1 && parent!=nodes){
+                return true;
+            }
+        }
+        return false;
     }
     public static boolean bfs(int node,int[] vis,ArrayList<ArrayList<Integer>> adj){
         vis[node]=1;
