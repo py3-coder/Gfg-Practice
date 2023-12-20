@@ -32,67 +32,78 @@ public class Main{
 
 
 // User function Template for Java
-
+class DistjointSet{
+    List<Integer> size = new ArrayList<>();
+    List<Integer> parent =new ArrayList<>();
+    
+    public DistjointSet(int n){
+        for(int i=0;i<=n;i++){
+            size.add(1);
+            parent.add(i);
+        }
+    }
+    
+    public int findPar(int node){
+        if(parent.get(node)==node){
+            return node;
+        }
+        int par =findPar(parent.get(node));
+        parent.set(node,par);
+        return parent.get(node);
+    }
+    
+    public void unionBySize(int u,int v){
+        int utp_u =findPar(u);
+        int utp_v =findPar(v);
+        
+        if(utp_u == utp_v) return;
+        
+        if(size.get(utp_u)>size.get(utp_v)){
+            parent.set(utp_v,utp_u);
+            size.set(utp_u,size.get(utp_u)+size.get(utp_v));
+        }else{
+            parent.set(utp_u,utp_v);
+            size.set(utp_v,size.get(utp_u)+size.get(utp_v));
+        }
+    }
+}
 class Solution{
 	static int spanningTree(int V, int E, int edges[][]){
-	    // Code Here. 
+	    // Code Here.
 	    
-	    //Lets Make Graph :: Prim's Algo ::)
-	    List<List<Pair>> adj =new ArrayList<>();
-	    for(int i=0;i<V;i++){
-	        adj.add(new ArrayList<>());
-	    }
+	    List<Triple> edge = new ArrayList<>();
+	    
 	    for(int i=0;i<edges.length;i++){
-	        adj.get(edges[i][0]).add(new Pair(edges[i][1],edges[i][2]));
-	        adj.get(edges[i][1]).add(new Pair(edges[i][0],edges[i][2]));
+	        edge.add(new Triple(edges[i][2],edges[i][0],edges[i][1]));
 	    }
+	    //Collections.sort(edge);
+	    Collections.sort(edge, (a, b) -> (a.wt-b.wt));
 	    
-	    PriorityQueue<Triple> pq =new PriorityQueue<>((a,b)->(a.wt-b.wt));
-	    
-	    int sum=0;
-	    int[] vis =new int[V];
-	    
-	    pq.offer(new Triple(0,0,-1));
-	    
-	    while(!pq.isEmpty()){
-	        int wt =pq.peek().wt;
-	        int node =pq.peek().node;
-	        int pnode =pq.peek().pnode;
-	        pq.poll();
+	    int minWt=0;
+	    DistjointSet ds = new DistjointSet(V);
+	    for(Triple curr : edge){
+	        int wt =curr.wt;
+	        int u =curr.u;
+	        int v =curr.v;
 	        
-	        if(vis[node]==1){
-	            continue;
+	        if(ds.findPar(u)!=ds.findPar(v)){
+	            minWt+=wt;
+	            ds.unionBySize(u,v);
 	        }
-	        vis[node] =1;
-	        sum+=wt;
 	        
-	        for(Pair curr : adj.get(node)){
-	            int ewt =curr.dist;
-	            int currNode =curr.node;
-	            if(vis[currNode]!=1){
-	                pq.offer(new Triple(ewt,currNode,node));
-	            }
-	        }
 	    }
-	    return sum;
-	}
-	static class Pair{
-	    int dist;
-	    int node;
+	    return minWt;
 	    
-	    Pair(int _node,int _dist){
-	        this.dist =_dist;
-	        this.node =_node;
-	    }
 	}
 	static class Triple{
 	    int wt;
-	    int node;
-	    int pnode;
-	    Triple(int _wt,int _node,int _pnode){
+	    int u;
+	    int v;
+	    
+	    Triple(int _wt,int _u,int _v){
 	        this.wt =_wt;
-	        this.node=_node;
-	        this.pnode=_pnode;
+	        this.u =_u;
+	        this.v=_v;
 	    }
 	}
 }
