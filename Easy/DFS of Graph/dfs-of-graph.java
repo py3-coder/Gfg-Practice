@@ -39,19 +39,19 @@ class Solution {
     public ArrayList<Integer> dfsOfGraph(int V, ArrayList<ArrayList<Integer>> adj) {
         // Code here
         ArrayList<Integer> res = new ArrayList<>();
-        HashSet<Integer> vis = new HashSet<>();
-        
-        dfs(0,adj,vis,res);
+        int[] vis = new int[V];
+        dfs(0,vis,adj,res);
         return res;
+        
     }
-    public static void dfs(int node,ArrayList<ArrayList<Integer>> adj,HashSet<Integer> vis,ArrayList<Integer> res){
-        vis.add(node);
+    public void dfs(int node,int[] vis,ArrayList<ArrayList<Integer>> adj,ArrayList<Integer> res){
+        vis[node]=1;
         res.add(node);
-        for(int depth : adj.get(node)){
-            if(!vis.contains(depth)){
-                dfs(depth,adj,vis,res);
+        
+        for(int nodes : adj.get(node)){
+            if(vis[nodes]!=1){
+                dfs(nodes,vis,adj,res);
             }
         }
     }
-    
 }
