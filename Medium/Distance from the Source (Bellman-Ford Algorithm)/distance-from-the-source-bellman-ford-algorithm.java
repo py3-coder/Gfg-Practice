@@ -56,28 +56,27 @@ class Solution {
         int[] dist = new int[V];
         Arrays.fill(dist,(int)1e8);
         dist[S]=0;
-        // N-1 relatation :-
-        for(int i=0;i<V-1;i++){
-            for(ArrayList<Integer> curr : edges){
-                int u =curr.get(0);
-                int v =curr.get(1);
-                int wt=curr.get(2);
+        
+        for(int i=0;i<V;i++){
+            for(ArrayList<Integer> edge : edges){
+                int u =edge.get(0);
+                int v = edge.get(1);
+                int wt = edge.get(2);
                 
                 if(dist[u]!=(int)1e8 && dist[u]+wt<dist[v]){
-                    dist[v] =dist[u]+wt;
+                    dist[v] = dist[u]+wt;
                 }
             }
         }
-        // N relaxation ::
-        for(ArrayList<Integer> curr : edges){
-            int u =curr.get(0);
-            int v =curr.get(1);
-            int wt =curr.get(2);
+        
+        //Check the Negative Cycle ::)
+        for(ArrayList<Integer> edge : edges){
+            int u =edge.get(0);
+            int v = edge.get(1);
+            int wt = edge.get(2);
             
-            if(dist[u]+wt<dist[v] && dist[u]!=(int)1e8){
-                int[] temp =new int[1];
-                temp[0]=-1;
-                return temp;
+            if(dist[u]!=(int)1e8 && dist[u]+wt<dist[v]){
+                return new int[]{-1};
             }
         }
         return dist;
