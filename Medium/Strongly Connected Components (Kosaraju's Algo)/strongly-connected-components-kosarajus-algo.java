@@ -44,6 +44,10 @@ class Gfg
 //User function Template for Java
 
 
+
+//User function Template for Java
+
+
 class Solution
 {
     //Function to find number of strongly connected components in the graph.
@@ -68,7 +72,6 @@ class Solution
             for(int ele : adj.get(i)){
                 adjT.get(ele).add(i);
             }
-            //adjT.get(adj.get(i).get(1)).add(adj.get(i).get(0));
         }
         int scc=0;
         while(!st.isEmpty()){
