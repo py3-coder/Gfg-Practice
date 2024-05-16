@@ -49,26 +49,32 @@ class gfg
 class Solution 
 { 
     //Function to return max value that can be put in knapsack of capacity W.
-    static int[][] memo =new int[1001][1001];
+    static int[][] memo;
     static int knapSack(int W, int wt[], int val[], int n) 
     { 
-        Arrays.stream(memo).forEach(a-> Arrays.fill(a,-1));
+        // your code here
+        // Recursion :-
+        //return solveRec(W,wt,val,n);
+        //
+        memo = new int[W+1][n+1];
+        Arrays.stream(memo).forEach(a->Arrays.fill(a,-1));
         return solveRec(W,wt,val,n);
+         
     } 
-    public static int solveRec(int w,int[] wt,int[] val,int n){
+    public static int solveRec(int W,int wt[],int val[],int n){
         //Base Case ::
-        if(w==0 || n==0) return 0;
+        if(W==0 || n==0) return 0;
         
-        if(memo[w][n]!=-1){
-            return memo[w][n];
+        if(memo[W][n]!=-1){
+            return memo[W][n];
         }
-        if(w<wt[n-1]){
-           return memo[w][n]=solveRec(w,wt,val,n-1);
+        if(wt[n-1]>W){
+            //can't pick it::
+            return memo[W][n]=solveRec(W,wt,val,n-1);
+        }else{
+            // will have choices pick/notpick :
+            return memo[W][n]=Math.max(solveRec(W-wt[n-1],wt,val,n-1)+val[n-1] , solveRec(W,wt,val,n-1));
         }
-        int pick =val[n-1]+solveRec(w-wt[n-1],wt,val,n-1);
-        int notpick =solveRec(w,wt,val,n-1);
-        return memo[w][n]=Math.max(pick,notpick);
-        
     }
 }
 
