@@ -26,43 +26,35 @@ class RodCutting {
 
 
 class Solution{
+    static int[][] memo;
     public int cutRod(int price[], int n) {
         //code here
-        // Lets Play with Recursion --> DP ::
-        //1. Recursion :: 
-        // TLE ::
-        //TC : O(2^n)
-        //SC : O(1)
-        int size[] = new int[n];
+        int[] len = new int[n];
         for(int i=0;i<n;i++){
-            size[i] =i+1;
+            len[i]=i+1;
         }
-        // return solveRec(price,size,n,n);
-        int [][] memo =new int[n+1][n+1];
+        int maxlen=n;
+        
+        memo =new int[n+1][n+1];
         Arrays.stream(memo).forEach(a->Arrays.fill(a,-1));
-        return solveMemo(price,size,n,n,memo);
-        
-    }
-    public static int solveRec(int price[],int size[],int n,int s){
-        //Base Case ::
-        if(n==0 || s==0) return 0;
-        
-        if(size[n-1]>s){
-            return solveRec(price,size,n-1,s);
-        }else{
-            return Math.max(price[n-1]+solveRec(price,size,n,s-size[n-1]),solveRec(price,size,n-1,s));
-        }
-    }
-    public static int solveMemo(int price[],int size[],int n,int s,int[][] memo){
-        if(n==0 || s==0) return 0;
-        if(memo[n][s]!=-1){
-            return memo[n][s];
-        }
-        if(size[n-1]>s){
-            return memo[n][s]=solveMemo(price,size,n-1,s,memo);
-        }else{
-            return memo[n][s]=Math.max(price[n-1]+solveMemo(price,size,n,s-size[n-1],memo),solveMemo(price,size,n-1,s,memo));
-        }
+        return solveRec(n,maxlen,price,len);
     }
     
+    public int solveRec(int n,int maxlen,int[] price ,int[] len){
+        if(n==0 || maxlen==0){
+            return 0;
+        }
+        
+        if(memo[n][maxlen]!=-1){
+            return memo[n][maxlen];
+        }
+        if(len[n-1]>maxlen){
+            //can't add ::
+            return memo[n-1][maxlen]=solveRec(n-1,maxlen,price,len);
+        }else{
+            // choices ::
+            return memo[n-1][maxlen]=Math.max(price[n-1]+solveRec(n,maxlen-len[n-1],price,len),solveRec(n-1,maxlen,price,len));
+            
+        }
+    }
 }
