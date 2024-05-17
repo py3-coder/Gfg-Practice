@@ -33,41 +33,30 @@ class GFG{
 //User function Template for Java
 
 class Solution{
-    static int[][] memo = new int[1001][1001];
+    static int[][] memo;
     static int knapSack(int N, int W, int val[], int wt[])
     {
         // code here
-        //Lets play with recursion :-
-        //1.Recursion ::
-        //TC : O(2^n)
-        // TLE 
-        // return solveRec(N,W,val,wt);
-        //2. Memo Call
-        Arrays.stream(memo).forEach(a -> Arrays.fill(a,-1));
-        return solveMemo(N,W,val,wt);
         
+        //
+        memo=  new int[N+1][W+1];
+        Arrays.stream(memo).forEach(a->Arrays.fill(a,-1));
+        return solveRec(N,W,val,wt);
     }
-    public static int solveRec(int n,int w,int val[],int wt[]){
-        //Base Case ::
-        if(n==0 || w==0) return 0;
-        
-        if(wt[n-1]>w){
-            return solveRec(n-1,w,val,wt);
-        }else{
-            return Math.max(val[n-1]+solveRec(n,w-wt[n-1],val,wt),solveRec(n-1,w,val,wt));
+    
+    public static int solveRec(int n,int w,int[] val ,int[] wt){
+        //Base Casee ::
+        if(n==0 || w==0){
+            return 0;
         }
-    }
-    public static int solveMemo(int n,int w,int val[],int wt[]){
-       //Base Case ::
-        if(n==0 || w==0) return 0;
         
         if(memo[n][w]!=-1){
             return memo[n][w];
         }
         if(wt[n-1]>w){
-            return memo[n][w]=solveMemo(n-1,w,val,wt);
+            return memo[n][w]=solveRec(n-1,w,val,wt);
         }else{
-            return memo[n][w]=Math.max(val[n-1]+solveMemo(n,w-wt[n-1],val,wt),solveMemo(n-1,w,val,wt));
-        } 
+            return memo[n][w]=Math.max(val[n-1]+solveRec(n,w-wt[n-1],val,wt),solveRec(n-1,w,val,wt));
+        }
     }
 }
