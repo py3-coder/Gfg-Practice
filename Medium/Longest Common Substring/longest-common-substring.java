@@ -30,33 +30,31 @@ class GFG
 //User function Template for Java
 
 class Solution{
+    static HashMap<String,Integer> map ;
     int longestCommonSubstr(String S1, String S2, int n, int m){
-        // Recusrision is bit logical :: Handle With Care:
-        //1. Recursion:: TLE :
-        //return solveRec(S1,S2,n,m,0);
-        //2 Memoisation:
-        // Since We have 3 varible n,m ,length so we can't store in 2d matrix;
-        // We need 3d dp::
-        //better use hashmap::
-        // HashMap<String,Integer> map = new HashMap<>();
-        // return solveMemo(S1,S2,n,m,0,map);
-        
-        //3. Tabulation TOP-DOWN:
+        // code here
+        map = new HashMap<>();
         return solveTab(S1,S2,n,m);
     }
-    public static int solveRec(String S1,String S2,int n ,int m,int len){
-        // Base::
+    public int solveRec(String s1,String s2,int n ,int m,int len){
+        //Base Case ::-
         if(n==0 || m==0) return len;
         
-        // last char are same we include it else:
-        int ans2=0; int ans1=len;
-        if(S1.charAt(n-1)== S2.charAt(m-1)){
-            ans1 =solveRec(S1,S2,n-1,m-1,len+1);
+        String key=n+"f"+m+"s"+len;
+        if(map.containsKey(key)){
+            return map.get(key);
         }
-        ans2 =Math.max(solveRec(S1,S2,n-1,m,0),solveRec(S1,S2,n,m-1,0));
+        int ans1=len,ans2=0;
+        if(s1.charAt(n-1) == s2.charAt(m-1)){
+            ans1 =solveRec(s1,s2,n-1,m-1,len+1);
+        }
+        ans2 = Math.max(solveRec(s1,s2,n-1,m,0),solveRec(s1,s2,n,m-1,0));
+        map.put(key,Math.max(ans1,ans2));
         return Math.max(ans1,ans2);
     }
-    public static int solveMemo(String S1,String S2,int n ,int m,int len,HashMap<String,Integer> map){
+    // TC : 109/119 
+    /// Due to 3rd DP
+    public static int solveMemo(String S1,String S2,int n ,int m,int len){
         // Base::
         if(n==0 || m==0) return len;
         //check precamputed::
@@ -67,9 +65,9 @@ class Solution{
         // last char are same we include it else:
         int ans2=0; int ans1=len;
         if(S1.charAt(n-1)== S2.charAt(m-1)){
-            ans1 =solveMemo(S1,S2,n-1,m-1,len+1,map);
+            ans1 =solveMemo(S1,S2,n-1,m-1,len+1);
         }
-        ans2 =Math.max(solveMemo(S1,S2,n-1,m,0,map),solveMemo(S1,S2,n,m-1,0,map));
+        ans2 =Math.max(solveMemo(S1,S2,n-1,m,0),solveMemo(S1,S2,n,m-1,0));
         map.put(key,Math.max(ans1,ans2));
         return Math.max(ans1,ans2);
     }
@@ -91,6 +89,8 @@ class Solution{
             }
         }
         return sol;
-        
     }
+    public static int solveOp
+    
 }
+
