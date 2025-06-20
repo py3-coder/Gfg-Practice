@@ -1,67 +1,39 @@
-//{ Driver Code Starts
-import java.io.*;
-import java.lang.*;
-import java.util.*;
-
-class GFG {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int T = Integer.parseInt(br.readLine().trim());
-        while (T-- > 0) {
-            String[] s = br.readLine().trim().split(" ");
-            int V = Integer.parseInt(s[0]);
-            int E = Integer.parseInt(s[1]);
-            ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
-            for (int i = 0; i < V; i++) adj.add(i, new ArrayList<Integer>());
-            for (int i = 0; i < E; i++) {
-                String[] S = br.readLine().trim().split(" ");
-                int u = Integer.parseInt(S[0]);
-                int v = Integer.parseInt(S[1]);
-                adj.get(u).add(v);
-                adj.get(v).add(u);
-            }
-            Solution obj = new Solution();
-            boolean ans = obj.isCycle(adj);
-            if (ans)
-                System.out.println("1");
-            else
-                System.out.println("0");
-
-            System.out.println("~");
-        }
-    }
-}
-// } Driver Code Ends
-
-
 class Solution {
-    // Function to detect cycle in an undirected graph.
-    public boolean isCycle(ArrayList<ArrayList<Integer>> adj) {
-        // Code here
-        
-        int[] vis = new int[adj.size()];
-        
-        for(int i=0;i<adj.size();i++){
+    public boolean isCycle(int V, int[][] edges) {
+        // Appproch : BFS -- queue[(node , parent)]
+        List<List<Integer>> adj = new ArrayList<>();
+        for(int i=0;i<V;i++){
+            adj.add(new ArrayList<>());
+        }
+        for(int[] edge : edges){
+            int u=edge[0], v=edge[1];
+            adj.get(u).add(v);
+            adj.get(v).add(u);
+        }
+        int[] vis=new int[V];
+        for(int i=0;i<V;i++){
             if(vis[i]!=1){
-                if(dfs(i,-1,adj,vis)==true){
-                    return true;
-                }
+                if(bfs(i,vis,adj))return true; 
             }
         }
         return false;
     }
-    
-    public static boolean dfs(int node,int par,ArrayList<ArrayList<Integer>> adj,int[] vis){
+    public static boolean bfs(int node, int[] vis , List<List<Integer>> adj ){
+        Queue<int[]> que = new LinkedList<>();
+        que.offer(new int[]{node,-1});
         vis[node]=1;
         
-        for(int adjNode : adj.get(node)){
-            if(vis[adjNode]!=1){
-                if(dfs(adjNode , node, adj,vis)==true){
+        while(!que.isEmpty()){
+            int[] tempNode = que.peek();
+            que.poll();
+            for(int ngbr : adj.get(tempNode[0])){
+                if(vis[ngbr]!=1){
+                    vis[ngbr]=1;
+                    que.offer(new int[]{ngbr , tempNode[0]});
+                }else{
+                    if(ngbr!=tempNode[1])
                     return true;
                 }
-            }
-            else if(vis[adjNode]==1 && par != adjNode){
-                    return true;
             }
         }
         return false;
